@@ -91,10 +91,6 @@
       <!-- Sessions list -->
       <div class="page-header fade-in-up delay-2">
         <h2>Sessions</h2>
-        <button class="btn btn-primary" id="btn-add-session">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          New Session
-        </button>
       </div>
 
       <div id="sessions-container" class="fade-in-up delay-3">
@@ -154,7 +150,6 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary modal-close">Cancel</button>
-      <button class="btn btn-primary" id="btn-save-session">Create Session</button>
     </div>
   </div>
 </div>
@@ -213,7 +208,7 @@ function renderStats(data) {
 
 function renderSessions(data, container) {
   if (!data.length) {
-    renderEmpty(container, 'No sessions scheduled for today. Create one using the button above.');
+    renderEmpty(container, 'No sessions scheduled for today.');
     return;
   }
   container.innerHTML = `<div class="grid grid-auto">${data.map(sessionCard).join('')}</div>`;
@@ -289,13 +284,6 @@ document.getElementById('btn-mark-attend').addEventListener('click', async () =>
     }
   } catch (err) { showToast(err.message || 'Network error', 'error'); }
   setSubmitting(btn, false);
-});
-
-// Add session
-document.getElementById('btn-add-session').addEventListener('click', () => openModal('add-session-modal'));
-document.getElementById('btn-save-session').addEventListener('click', () => {
-  showToast('Session creation via API is not available yet. Sessions are auto-created when a schedule is saved.', 'info');
-  closeModal('add-session-modal');
 });
 
 loadSessions();

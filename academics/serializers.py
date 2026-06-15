@@ -17,6 +17,8 @@ class RoomSerializer(serializers.ModelSerializer):
 
 
 class ScheduleSerializer(serializers.ModelSerializer):
+    day = serializers.CharField(read_only=True)
+
     class Meta:
         model = Schedule
         fields = '__all__'
@@ -36,6 +38,8 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
 
 class SpecialScheduleSerializer(serializers.ModelSerializer):
+    day = serializers.CharField(read_only=True)
+
     class Meta:
         model = SpecialSchedule
         fields = '__all__'

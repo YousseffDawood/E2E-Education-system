@@ -45,17 +45,16 @@
   <div class="modal">
     <div class="modal-header"><h3>Add Teacher</h3><button class="modal-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
     <div class="modal-body">
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;padding:10px;background:var(--warning-light);border-radius:var(--radius-sm);">Teachers are added without a user account.</p>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Name <span>*</span></label><input class="form-control" id="t-name" placeholder="Full name"/></div>
         <div class="form-group"><label class="form-label">Phone <span>*</span></label><input class="form-control" id="t-phone" placeholder="010xxxxxxxx"/></div>
-      </div>
+      </div
       <div class="form-row">
         <div class="form-group"><label class="form-label">Email <span>*</span></label><input class="form-control" id="t-email" type="email" placeholder="email@example.com"/></div>
         <div class="form-group"><label class="form-label">Specialization</label><input class="form-control" id="t-desc" placeholder="e.g. Mathematics"/></div>
       </div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;padding-bottom:5mm"><button class="btn btn-secondary modal-close">Cancel</button><button class="btn btn-primary" id="btn-save-teacher">Add Teacher</button></div>
     </div>
-    <div class="modal-footer"><button class="btn btn-secondary modal-close">Cancel</button><button class="btn btn-primary" id="btn-save-teacher">Add Teacher</button></div>
   </div>
 </div>
 
@@ -76,6 +75,27 @@
 (function(){const img=document.getElementById('banner-img');const exts=['jpg','jpeg','png','webp'];let i=0;img.onerror=()=>{if(++i<exts.length)img.src=`wallpapers/teachers.${exts[i]}`;};img.src=`wallpapers/teachers.${exts[0]}`;})();
 
 let allTeachers = [];
+
+function truncateWords(text, count) {
+  const words = `${text || ''}`.trim().split(/\s+/).filter(Boolean);
+  return words.length <= count ? words.join(' ') : `${words.slice(0, count).join(' ')}...`;
+}
+
+function formatWeekday(day, startDate) {
+  const raw = `${day || ''}`.trim();
+  if (!raw && startDate) {
+    const d = new Date(startDate);
+    if (!isNaN(d)) return d.toLocaleDateString('en-GB', { weekday: 'long' });
+    return '—';
+  }
+  if (!raw) return '—';
+  const map = {
+    '0': 'Sunday', '1': 'Monday', '2': 'Tuesday', '3': 'Wednesday', '4': 'Thursday', '5': 'Friday', '6': 'Saturday',
+    'SUN': 'Sunday', 'MON': 'Monday', 'TUE': 'Tuesday', 'WED': 'Wednesday', 'THU': 'Thursday', 'FRI': 'Friday', 'SAT': 'Saturday',
+    'SUNDAY': 'Sunday', 'MONDAY': 'Monday', 'TUESDAY': 'Tuesday', 'WEDNESDAY': 'Wednesday', 'THURSDAY': 'Thursday', 'FRIDAY': 'Friday', 'SATURDAY': 'Saturday',
+  };
+  return map[raw.toUpperCase()] || raw;
+}
 
 async function loadTeachers() {
   const container = document.getElementById('teachers-container');
@@ -105,7 +125,7 @@ function renderTeachers(data, container) {
         <div class="person-card-name">${t.name || '—'}</div>
         <div class="person-card-meta">${t.email || ''} ${t.phone ? '· ' + t.phone : ''}</div>
         <div class="person-card-tags">
-          <span class="badge badge-blue">${t.description || 'No specialty'}</span>
+          <span class="badge badge-blue">${truncateWords(t.description || 'No specialty', 3)}</span>
         </div>
         <div style="margin-top:10px;display:flex;gap:8px;">
           <button class="btn btn-secondary btn-sm btn-view-teacher" data-id="${t.id}">View Details</button>
@@ -148,7 +168,7 @@ async function viewTeacher(id) {
     : `<div class="table-wrap"><table><thead><tr><th>Subject</th><th>Day</th><th>Time</th><th>Duration</th></tr></thead><tbody>${schedule.map(s => `
         <tr>
           <td style="font-weight:600">${s.subject || '—'}</td>
-          <td><span class="badge badge-blue">${s.day || '—'}</span></td>
+          <td><span class="badge badge-blue">${formatWeekday(s.day, s.start_date)}</span></td>
           <td>${formatTime(s.time_start)}</td>
           <td>${s.duration_in_minutes} min</td>
         </tr>`).join('')}</tbody></table></div>`;

@@ -1111,7 +1111,7 @@ tr:hover td {
 .modal-footer {
   padding: 14px 24px 20px;
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
   gap: 10px;
   border-top: 1px solid var(--border);
   background: var(--bg);
@@ -1445,18 +1445,27 @@ tr:hover td {
   font-size: 15px;
   font-weight: 700;
   margin-bottom: 3px;
+  overflow-wrap: anywhere;
 }
 
 .person-card-meta {
   font-size: 13px;
   color: var(--text-muted);
   margin-bottom: 10px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .person-card-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
+}
+
+.person-card-tags .badge {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 /* ── Announcement card ── */
